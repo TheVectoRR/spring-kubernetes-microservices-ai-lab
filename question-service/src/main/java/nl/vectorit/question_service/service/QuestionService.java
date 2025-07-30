@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +49,7 @@ public class QuestionService {
 
     public ResponseEntity<List<QuestionForUser>> getQuestionsFromIDs(List<Integer> questionIds) {
         List<QuestionForUser> questionsForUser = questionIds.stream()
-                        .map(id -> questionRepository.findById(id).orElse(null))
+                .map(id -> questionRepository.findById(id).orElse(null))
                 .filter(Objects::nonNull)
                 .map(question -> new QuestionForUser(
                         question.getId(),
@@ -64,8 +65,10 @@ public class QuestionService {
 
     public ResponseEntity<Integer> getScore(List<QuizResponse> responses) {
         Long correctAnswers = responses.stream()
-                .filter(response -> response.getAnswer().equals(
-                        questionRepository.findById(response.getId()).get().getRightAnswer())
+                .filter(response -> {
+                            Optional<Question> question = questionRepository.findById(response.getId());
+                            return question.filter(value -> response.getAnswer().equals(value.getRightAnswer())).isPresent();
+                        }
                 )
                 .count();
         return new ResponseEntity<>(Math.toIntExact(correctAnswers), HttpStatus.OK);

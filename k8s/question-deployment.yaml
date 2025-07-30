@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-quiz
+  name: question-service
   labels:
-    app: db-quiz
+    app: question-service
 spec:
-  replicas: 1
+  replicas: 1  # must be 1 because service and db are in same pod
   selector:
     matchLabels:
-      app: db-quiz
+      app: question-service
   template:
     metadata:
-      name: db-quiz
+      name: question-service
       labels:
-        app: db-quiz
+        app: question-service
     spec:
       containers:
         - name: postgres
@@ -24,9 +24,14 @@ spec:
             - name: POSTGRES_PASSWORD
               value: postgres
             - name: POSTGRES_DB
-              value: quizdb
+              value: questiondb
           ports:
             - containerPort: 5432
-              name: quiz-db-port
+              name: question-db-p
+        - name: quiz-question-service
+          image: vectorit/quiz-question-service
+          ports:
+            - containerPort: 8082
+              name: question-srv-p
 
 

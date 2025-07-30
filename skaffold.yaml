@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: spring-quiz-microservices
+build:
+  artifacts:
+    - image: vectorit/quiz-question-service
+      context: .
+      docker:
+        dockerfile: question-service/Dockerfile
+    - image: vectorit/quiz-quiz-service
+      context: .
+      docker:
+        dockerfile: quiz-service/Dockerfile
+  local:
+    push: false  # don't push to registry when using local k8s like minikube
+manifests:
+  rawYaml:
+    - k8s/question-deployment.yaml
+    - k8s/question-service.yaml
+    - k8s/quiz-deployment.yaml
+    - k8s/quiz-service.yaml
+deploy:
+  kubectl: {}

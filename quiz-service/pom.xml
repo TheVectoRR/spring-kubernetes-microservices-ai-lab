@@ -9,10 +9,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>question-service</artifactId>
+	<artifactId>quiz-service</artifactId>
 	<packaging>jar</packaging>
-	<name>question-service</name>
-	<description>question service for the quiz app</description>
+	<name>quiz-service</name>
+	<description>quiz service for the quiz app</description>
 
 	<dependencies>
 		<dependency>
@@ -37,17 +37,15 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 <!--	<dependencyManagement>-->

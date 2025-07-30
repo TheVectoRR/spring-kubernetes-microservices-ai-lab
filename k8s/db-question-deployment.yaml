@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-question
+  labels:
+    app: db-question
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-question
+  template:
+    metadata:
+      name: db-question
+      labels:
+        app: db-question
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17.5-alpine
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: questiondb
+          ports:
+            - containerPort: 5432
+              name: question-db-p
+
+

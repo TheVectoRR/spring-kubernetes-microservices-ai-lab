@@ -17,13 +17,11 @@
 
 	<modules>
 		<module>question-service</module>
-		<!-- later: <module>order-service</module> -->
-		<!-- later: <module>common</module> -->
+		<module>quiz-service</module>
 	</modules>
 
 	<properties>
 		<java.version>24</java.version>
-<!--		<spring.boot.version>3.5.4</spring.boot.version>-->
 	</properties>
 
 <!--	<dependencyManagement>-->

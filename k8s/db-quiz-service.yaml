@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-quiz
+  labels:
+    app: db-quiz
+spec:
+#  type: ClusterIP => should be this
+  type: NodePort
+  ports:
+    - name: "db-quiz-service"
+      port: 5432
+      targetPort: 5432
+      nodePort: 30433
+  selector:
+    app: db-quiz

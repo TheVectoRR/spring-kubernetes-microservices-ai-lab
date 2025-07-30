@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-quiz
+  labels:
+    app: db-quiz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-quiz
+  template:
+    metadata:
+      name: db-quiz
+      labels:
+        app: db-quiz
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17.5-alpine
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: quizdb
+          ports:
+            - containerPort: 5432
+              name: quiz-db-port
+
+

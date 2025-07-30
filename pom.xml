@@ -11,78 +11,61 @@
 	<groupId>nl.vectorit</groupId>
 	<artifactId>quizapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>quizapp</name>
 	<description>Quiz App</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
+	<modules>
+		<module>question-service</module>
+		<!-- later: <module>order-service</module> -->
+		<!-- later: <module>common</module> -->
+	</modules>
+
 	<properties>
 		<java.version>24</java.version>
+<!--		<spring.boot.version>3.5.4</spring.boot.version>-->
 	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
 
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+<!--	<dependencyManagement>-->
+<!--		<dependencies>-->
+<!--			<dependency>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-dependencies</artifactId>-->
+<!--				<version>${spring.boot.version}</version>-->
+<!--				<type>pom</type>-->
+<!--				<scope>import</scope>-->
+<!--			</dependency>-->
+<!--		</dependencies>-->
+<!--	</dependencyManagement>-->
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+<!--	<build>-->
+<!--		<pluginManagement>-->
+<!--			<plugins>-->
+<!--				&lt;!&ndash; Compiler Plugin &ndash;&gt;-->
+<!--				<plugin>-->
+<!--					<groupId>org.apache.maven.plugins</groupId>-->
+<!--					<artifactId>maven-compiler-plugin</artifactId>-->
+<!--					<version>3.11.0</version>-->
+<!--					<configuration>-->
+<!--						<source>${java.version}</source>-->
+<!--						<target>${java.version}</target>-->
+<!--						<annotationProcessorPaths>-->
+<!--							<path>-->
+<!--								<groupId>org.projectlombok</groupId>-->
+<!--								<artifactId>lombok</artifactId>-->
+<!--							</path>-->
+<!--						</annotationProcessorPaths>-->
+<!--					</configuration>-->
+<!--				</plugin>-->
+
+<!--				&lt;!&ndash; Spring Boot Plugin &ndash;&gt;-->
+<!--				<plugin>-->
+<!--					<groupId>org.springframework.boot</groupId>-->
+<!--					<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--					<version>${spring.boot.version}</version>-->
+<!--				</plugin>-->
+<!--			</plugins>-->
+<!--		</pluginManagement>-->
+<!--	</build>-->
 
 </project>

@@ -1,0 +1,120 @@
+# k8s/postgres-databases.yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-question-secret
+type: Opaque
+stringData:
+  POSTGRES_DB: "questiondb"
+  POSTGRES_USER: "question_user"
+  POSTGRES_PASSWORD: "question_pass"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-quiz-secret
+type: Opaque
+stringData:
+  POSTGRES_DB: "quizdb"
+  POSTGRES_USER: "quiz_user"
+  POSTGRES_PASSWORD: "quiz_pass"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-question
+spec:
+  ports:
+    - port: 5432
+      name: postgres
+  clusterIP: None
+  selector:
+    app: postgres-question
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-question
+spec:
+  serviceName: postgres-question
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-question
+  template:
+    metadata:
+      labels:
+        app: postgres-question
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-question-secret
+          volumeMounts:
+            - name: postgres-question-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-question-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-quiz
+spec:
+  ports:
+    - port: 5432
+      name: postgres
+  clusterIP: None
+  selector:
+    app: postgres-quiz
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-quiz
+spec:
+  serviceName: postgres-quiz
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-quiz
+  template:
+    metadata:
+      labels:
+        app: postgres-quiz
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-quiz-secret
+          volumeMounts:
+            - name: postgres-quiz-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-quiz-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

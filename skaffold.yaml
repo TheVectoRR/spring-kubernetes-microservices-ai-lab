@@ -16,6 +16,7 @@ build:
     push: false  # don't push to registry when using local k8s like minikube
 manifests:
   rawYaml:
+    - k8s/postgres-databases.yaml
     - k8s/question-deployment.yaml
     - k8s/question-service.yaml
     - k8s/quiz-deployment.yaml

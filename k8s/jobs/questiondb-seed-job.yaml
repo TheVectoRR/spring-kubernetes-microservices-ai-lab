@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: questiondb-seed-sql
+data:
+  seed.sql: |
+    INSERT INTO question (id, category, difficulty_level, option1, option2, option3, option4,
+                          question_title, right_answer) VALUES
+                                                            (1, 'Java', 'Easy', 'C++', 'Java', 'Python', 'Ruby', 'What programming language is primarily used
+    for Android development?', 'Java'),
+                                                            (2, 'Java', 'Easy', 'JVM', 'JRE', 'JDK', 'JAVAC', 'Which one is the Java Virtual Machine?',
+                                                             'JVM'),
+                                                            (3, 'Java', 'Medium', 'Static', 'Dynamic', 'Both', 'None', 'In Java, method overloading is an
+    example of __________ polymorphism.', 'Static'),
+                                                            (4, 'Java', 'Medium', 'Encapsulation',
+                                                             'Inheritance', 'Polymorphism', 'Abstraction', 'What is the
+    main feature of Object-Oriented Programming?', 'Encapsulation'),
+                                                            (5, 'Java', 'Easy', 'new', 'this', 'super', 'self', 'Which keyword is used to create an object in Java?',
+                                                             'new');
+
+    INSERT INTO question (id, category, difficulty_level, option1, option2, option3, option4,
+                          question_title, right_answer) VALUES
+                                                            (6, 'Python', 'Easy', 'Python', 'Java', 'C++', 'C#', 'Which language is known as the "batteries
+    included" language?', 'Python'),
+                                                            (7, 'Python', 'Medium', 'List', 'Tuple', 'Set', 'Dictionary', 'Which of the following is an
+    immutable data type in Python?', 'Tuple'),
+                                                            (8, 'Python', 'Easy', '2', '3', '4', '5', 'How many built-in data types does Python have?', '9'),
+                                                            (9, 'Python', 'Medium', 'def', 'func', 'function', 'method', 'What keyword is used to define a
+    function in Python?', 'def');
+
+    INSERT INTO question (id, category, difficulty_level, option1, option2, option3, option4,
+                          question_title, right_answer) VALUES
+                                                            (10, 'C++', 'Easy', 'No', 'Yes', 'Maybe', 'Depends', 'Does C++ support multiple inheritance?',
+                                                             'Yes'),
+                                                            (11, 'C++', 'Medium', 'A', 'B', 'C', 'D', 'What is the default access modifier for class members in
+    C++?', 'Private'),
+                                                            (12, 'C++', 'Easy', '2', '4', '8', '16', 'How many bytes is a pointer in C++ on a 32-bit system?', '4'),
+                                                            (13, 'C++', 'Medium', 'new', 'malloc', 'calloc', 'All of the above', 'Which operator is used to
+    allocate memory in C++?', 'new');
+
+    INSERT INTO question (id, category, difficulty_level, option1, option2, option3, option4,
+                          question_title, right_answer) VALUES
+                                                            (14, 'JavaScript', 'Easy', 'Java', 'JavaScript', 'C++', 'C#', 'Which language is primarily used for
+    web development?', 'JavaScript'),
+                                                            (15, 'JavaScript', 'Medium', 'var', 'let', 'const', 'All of the above', 'Which of the following is not a
+    keyword in JavaScript?', 'None');
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: questiondb-seed
+spec:
+  template:
+    spec:
+      containers:
+        - name: seed
+          image: postgres:15
+          command: ["psql"]
+          args:
+            ["-h", "postgres-question", "-U", "question_user", "-d", "questiondb", "-f", "/sql/seed.sql"]
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-question-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: sql-volume
+              mountPath: /sql
+      volumes:
+        - name: sql-volume
+          configMap:
+            name: questiondb-seed-sql
+      restartPolicy: Never
+  backoffLimit: 1

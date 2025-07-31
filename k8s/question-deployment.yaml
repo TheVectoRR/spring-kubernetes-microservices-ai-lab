@@ -5,7 +5,7 @@ metadata:
   labels:
     app: question-service
 spec:
-  replicas: 1  # must be 1 because service and db are in same pod
+  replicas: 1
   selector:
     matchLabels:
       app: question-service
@@ -16,18 +16,6 @@ spec:
         app: question-service
     spec:
       containers:
-        - name: postgres
-          image: postgres:17.5-alpine
-          env:
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              value: postgres
-            - name: POSTGRES_DB
-              value: questiondb
-          ports:
-            - containerPort: 5432
-              name: question-db-p
         - name: quiz-question-service
           image: vectorit/quiz-question-service
           ports:

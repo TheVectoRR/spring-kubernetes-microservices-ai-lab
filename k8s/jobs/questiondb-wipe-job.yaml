@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: questiondb-wipe
+spec:
+  template:
+    spec:
+      containers:
+        - name: wipe
+          image: postgres:15
+          command: ["psql"]
+          args:
+            [
+              "-h", "postgres-question",
+              "-U", "question_user",
+              "-d", "questiondb",
+              "-c", "TRUNCATE TABLE question RESTART IDENTITY CASCADE;"
+            ]
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-question-secret
+                  key: POSTGRES_PASSWORD
+      restartPolicy: Never
+  backoffLimit: 1

@@ -19,12 +19,12 @@ import java.util.List;
 @EnableFeignClients
 public interface QuizInterface {
     @GetMapping("question/generate")
-    public ResponseEntity<List<Integer>> getQuestionsForQuiz(@RequestParam String category, @RequestParam Integer numQuestions);
+    ResponseEntity<List<Integer>> getQuestionsForQuiz(@RequestParam String category, @RequestParam Integer numQuestions);
 
     @PostMapping("question/getQuestions")
-    public ResponseEntity<List<QuestionForUser>> getQuestionsFromId(@RequestBody List<Integer> questionIds);
+    ResponseEntity<List<QuestionForUser>> getQuestionsFromId(@RequestBody List<Integer> questionIds);
 
     @PostMapping("question/getScore")
-    public ResponseEntity<Integer> getScore(@RequestBody List<QuizResponse> responses);
+    ResponseEntity<Integer> getScore(@RequestBody List<QuizResponse> responses);
 
 }

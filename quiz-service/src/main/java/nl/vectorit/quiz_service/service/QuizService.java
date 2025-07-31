@@ -1,5 +1,6 @@
 package nl.vectorit.quiz_service.service;
 
+import nl.vectorit.quiz_service.feign.QuizInterface;
 import nl.vectorit.quiz_service.model.QuestionForUser;
 import nl.vectorit.quiz_service.model.Quiz;
 import nl.vectorit.quiz_service.model.QuizResponse;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,58 +19,48 @@ public class QuizService {
     @Autowired
     private QuizRepository quizRepository;
 
+    @Autowired
+    private QuizInterface quizInterface;
+
     public ResponseEntity<String> createQuiz(String category, Integer numOfQuestions, String title) {
 
-//        List<Integer> questions = // RestTemplate http://localhost:8080/question/generate
-//
-//        Quiz quiz = new Quiz();
-//        quiz.setTitle(title);
-////        quiz.setQuestions(questions);
-//
-//        quizRepository.save(quiz);
+        List<Integer> questions = quizInterface.getQuestionsForQuiz(category, numOfQuestions).getBody();
+        System.out.println(questions);
+        Quiz quiz = new Quiz();
+        quiz.setTitle(title);
+        quiz.setQuestionsIds(questions);
+        quizRepository.save(quiz);
 
         return new ResponseEntity<>("Quiz created", HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<QuestionForUser>> getQuizQuestions(Integer quizId) {
-        Optional<Quiz> quiz = quizRepository.findById(quizId);
+    public ResponseEntity<List<QuestionForUser>> getQuizQuestions(String quizName) {
+        Optional<Quiz> quiz = quizRepository.findByTitleIgnoreCase(quizName);
 
-//        if (quiz.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-////        List<Question> questionsFromDB = quiz.get().getQuestions();
-////        List<QuestionForUser> questionForUsers = questionsFromDB.stream().map(
-////                question -> new QuestionForUser(
-////                        question.getId(),
-////                        question.getQuestionTitle(),
-////                        question.getOption1(),
-////                        question.getOption2(),
-////                        question.getOption3(),
-////                        question.getOption4())
-////        ).toList();
-//
-        return new ResponseEntity<>(Arrays.asList(), HttpStatus.OK);
+        if (quiz.isEmpty()) {
+            System.err.println("No Quiz with title name: " + quizName);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        ResponseEntity<List<QuestionForUser>> questions = quizInterface.getQuestionsFromId(quiz.get().getQuestionsIds());
+
+        if (!questions.getStatusCode().is2xxSuccessful()) {
+            System.err.println("Failed to get questions from Ids from question-service: " + questions.getStatusCode());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(questions.getBody(), HttpStatus.OK);
     }
 
     public ResponseEntity<Integer> calculateResult(Integer id, List<QuizResponse> responses) {
-        Optional<Quiz> quiz = quizRepository.findById(id);
+        ResponseEntity<Integer> score = quizInterface.getScore(responses);
 
-//        if (quiz.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//        List<Question> questions = quiz.get().getQuestions();
-//
-//        Long correctAnswers = responses.stream()
-//                .filter(response -> response.getAnswer().equals(
-//                        questions.stream()
-//                                .filter(question -> response.getId().equals(question.getId()))
-//                                .findFirst().get()
-//                                .getRightAnswer())
-//                )
-//                .count();
+        if (!score.getStatusCode().is2xxSuccessful()) {
+            System.err.println("Failed to get score from question-service: " + score.getStatusCode());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return new ResponseEntity<>(Math.toIntExact(2), HttpStatus.OK);
+        return new ResponseEntity<>(score.getBody(), HttpStatus.OK);
 
     }
 }

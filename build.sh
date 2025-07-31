@@ -3,4 +3,8 @@
 mvn clean install -DskipTests
 skaffold dev
 
-#skaffold delete
+# remove the created kubernetes cluster
+# skaffold delete
+
+# cleanup unused docker images (created by skaffold)
+# docker image prune -af

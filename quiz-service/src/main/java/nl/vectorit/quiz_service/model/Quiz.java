@@ -1,5 +1,6 @@
 package nl.vectorit.quiz_service.model;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,5 +20,6 @@ public class Quiz {
     private Integer id;
     private String title;
 
-    private List<Integer> questions;
+    @ElementCollection
+    private List<Integer> questionsIds;
 }

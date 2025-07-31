@@ -22,9 +22,9 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @GetMapping("get/{quizId}")
-    public ResponseEntity<List<QuestionForUser>> getQuiz(@PathVariable Integer quizId) {
-        return quizService.getQuizQuestions(quizId);
+    @GetMapping("get/{quizName}")
+    public ResponseEntity<List<QuestionForUser>> getQuiz(@PathVariable String quizName) {
+        return quizService.getQuizQuestions(quizName);
     }
 
     @PostMapping("create")

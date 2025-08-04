@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: question-ai-service
+  labels:
+    app: question-ai-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: question-ai-service
+  template:
+    metadata:
+      name: question-ai-service
+      labels:
+        app: question-ai-service
+    spec:
+      containers:
+        - name: quiz-question-ai-service
+          image: vectorit/quiz-question-ai-service
+          ports:
+            - containerPort: 8083
+              name: ques-ai-srv-p
+
+

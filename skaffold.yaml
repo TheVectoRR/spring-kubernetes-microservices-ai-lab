@@ -8,6 +8,10 @@ build:
       context: .
       docker:
         dockerfile: question-service/Dockerfile
+    - image: vectorit/quiz-question-ai-service
+      context: .
+      docker:
+        dockerfile: question-ai-service/Dockerfile
     - image: vectorit/quiz-quiz-service
       context: .
       docker:
@@ -17,6 +21,8 @@ build:
 manifests:
   rawYaml:
     - k8s/postgres-databases.yaml
+    - k8s/question-ai-deployment.yaml
+    - k8s/question-ai-service.yaml
     - k8s/question-deployment.yaml
     - k8s/question-service.yaml
     - k8s/quiz-deployment.yaml

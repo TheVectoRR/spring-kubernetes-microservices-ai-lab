@@ -1,11 +1,11 @@
 # Spring Quiz Microservices Project
 
-This is a hobby project designed to explore **Spring Boot microservices** deployed with **Kubernetes**, orchestrated via **Skaffold**, with the future potential to integrate **Spring AI**.  
+This is a hobby project designed to explore **Spring Boot microservices** deployed with **Kubernetes**, orchestrated via **Skaffold**, with an ongoing integration of **Spring AI** (WIP).
 
 The primary goals of this project are:
 - To learn modern Spring Boot microservice architecture.
 - To gain hands-on experience with Kubernetes manifests and Skaffold for local orchestration.
-- To leave space for future AI integration using Spring AI.
+- To start integrating AI functionality using Ollama in a dedicated service.
 
 ---
 
@@ -20,6 +20,9 @@ spring-microservices/
 │   └── pom.xml
 │
 ├── quiz-service/          # Microservice 2: handles quizzes
+│   └── pom.xml
+│
+├── question-ai-service/            # Microservice 3: AI integration (WIP, using Ollama)
 │   └── pom.xml
 │
 └── k8s/                   # Kubernetes manifests
@@ -63,20 +66,21 @@ Here’s the reasoning behind the main decisions:
   - Enables live reloading of services after code changes.  
   - Keeps me close to production-like workflows without a full CI/CD pipeline yet.
 
-### Two Initial Services
+### Initial Services
 - **Decision**: Start with `question-service` and `quiz-service`.
-- **Reasoning**:  
-  - Small, clear domain boundaries to explore microservices interactions.  
-  - `question-service` handles CRUD for questions.  
-  - `quiz-service` consumes questions to create quizzes.  
+- **Reasoning**:
+  - Small, clear domain boundaries to explore microservices interactions.
+  - `question-service` handles CRUD for questions.
+  - `quiz-service` consumes questions to create quizzes.
   - Allows practicing RESTful communication and potentially service discovery.
 
-### Future: Spring AI Integration
-- **Decision**: Leave a placeholder for an `service-ai/` module.
-- **Reasoning**:  
-  - AI integration is a later goal.  
-  - Designing early for modular extension avoids major refactoring later.  
-  - Keeps the project motivating and future-proof for experimentation.
+### AI Service with Ollama (WIP)
+- **Decision**: Add a new `question-ai-service` module running an Ollama container alongside the Spring service.
+- **Reasoning**:
+  - Begins exploration of AI-assisted quiz generation and natural language processing.
+  - Running the Ollama image may take some time initially, as it needs to download the Mistral model.
+  - Keeping it in the same pod ensures efficient communication between the AI container and the Spring Boot service.
+
 ---
 
 ## Running the Project Locally
@@ -93,7 +97,6 @@ Here’s the reasoning behind the main decisions:
 2. **Access services**
    - Use `kubectl get svc` to get the NodePort or LoadBalancer URLs.
 
-
 3. **Running the kubernetes jobs**
    ```bash
    # Deleting all data from the data base
@@ -105,6 +108,7 @@ Here’s the reasoning behind the main decisions:
    # kubectl logs job/questiondb-wipe
    # kubectl logs job/questiondb-seed      
    ```
+
 ---
 
 ## License

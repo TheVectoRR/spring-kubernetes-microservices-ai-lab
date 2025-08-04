@@ -15,11 +15,28 @@ spec:
       labels:
         app: question-ai-service
     spec:
+      initContainers:
+        - name: download-mistral
+          image: ollama/ollama:latest
+          command: [ "sh", "-c", "ollama run mistral || true" ]
+          volumeMounts:
+            - name: ollama-models
+              mountPath: /root/.ollama
       containers:
         - name: quiz-question-ai-service
           image: vectorit/quiz-question-ai-service
           ports:
             - containerPort: 8083
               name: ques-ai-srv-p
+        - name: ollama
+          image: ollama/ollama:latest
+          ports:
+            - containerPort: 11434
+          volumeMounts:
+            - name: ollama-models
+              mountPath: /root/.ollama
+      volumes:
+        - name: ollama-models
+          emptyDir: { }
 
 
